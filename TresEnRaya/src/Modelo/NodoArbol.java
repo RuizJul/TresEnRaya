@@ -26,32 +26,32 @@ public class NodoArbol {
     }
 
     public void agregarHijo() {
-        if (hijos == null) {
-            hijos = new ArrayList<>();
-        }
+        // if (hijos == null) {
+        //     hijos = new ArrayList<>();
+        // }
 
-        // Definir símbolo según turno
-        char simbolo = turnoJugador ? 'X' : 'O';
+        // // Definir símbolo según turno
+        // char simbolo = turnoJugador ? 'X' : 'O';
 
-        // Obtener estado actual
-        char[][] estado = tableroActual.getEstado();
+        // // Obtener estado actual
+        // char[][] estado = tableroActual.getTablero();
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (estado[i][j] == ' ') { // Casilla libre
-                    // Clonar el tablero actual
-                    Tablero nuevoTablero = tableroActual.copiar();
-                    // Colocar la ficha en la copia
-                    nuevoTablero.colocarFicha(i, j, simbolo);
-                    // Crear el nodo hijo
-                    NodoArbol hijo = new NodoArbol();
-                    hijo.setTableroActual(nuevoTablero);
-                    hijo.setTurnoJugador(!turnoJugador); // Cambiar turno
-                    // Agregar a la lista de hijos
-                    hijos.add(hijo);
-                }
-            }
-        }
+        // for (int i = 0; i < 3; i++) {
+        //     for (int j = 0; j < 3; j++) {
+        //         if (estado[i][j] == ' ') { // Casilla libre
+        //             // Clonar el tablero actual
+        //             Tablero nuevoTablero = tableroActual.copiar();
+        //             // Colocar la ficha en la copia
+        //             nuevoTablero.colocarFicha(i, j, simbolo);
+        //             // Crear el nodo hijo
+        //             NodoArbol hijo = new NodoArbol();
+        //             hijo.setTableroActual(nuevoTablero);
+        //             hijo.setTurnoJugador(!turnoJugador); // Cambiar turno
+        //             // Agregar a la lista de hijos
+        //             hijos.add(hijo);
+        //         }
+        //     }
+        // }
     }
 
     public int getUtilidad() {

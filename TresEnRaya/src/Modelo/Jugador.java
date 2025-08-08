@@ -6,18 +6,29 @@ package Modelo;
 
 /**
  *
- * @author Julian
+ * @author Julian Ruiz, Jose Mora
  */
 public class Jugador {
     private String nombre;
     private char simbolo;
+    public enum Tipo {Jugador1, Jugador2};
     private boolean esHumano;
+    private static int instancias = 0;
+    private Tipo tipo;
 
-    // jagdor con atributos de nombre, simbolo de ficha a usar,  es jugador humano o computadora
-    public Jugador(String nombre, char simbolo, boolean esHumano) {
+    public Jugador(String nombre) {
         this.nombre = nombre;
-        this.simbolo = simbolo;
-        this.esHumano = esHumano;
+        instancias++;
+        if (instancias == 1) {
+            this.tipo = Tipo.Jugador1;
+            this.simbolo = 'X';
+        } else if (instancias == 2) {
+            this.tipo = Tipo.Jugador2;
+            this.simbolo = 'O';
+        } else {
+            throw new IllegalStateException("Solo pueden haber dos jugadores");
+        }
+        this.esHumano = true; // por defecto, se puede cambiar con setter
     }
 
     public void setNombre(String nombre) {
@@ -44,4 +55,16 @@ public class Jugador {
         return esHumano;
     }
 
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public static int getInstancias() {
+        return instancias;
+    }
+
+    // Método para resetear instancias al iniciar nueva partida
+    public static void resetInstancias() {
+        instancias = 0;
+    }
 }

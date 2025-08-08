@@ -4,8 +4,7 @@
  */
 package Logica;
 
-import Modelo.Jugador;
-import Modelo.Tablero;
+import Modelo.*;
 import java.util.Scanner;
 
 /**
@@ -25,49 +24,51 @@ public class Juego {
         this.scanner = new Scanner(System.in);
     }
 
-    // comienza el juego con funcionalidad basica para consola
     public void iniciar() {
         Jugador turnoActual = jugador1;
-        tablero.mostrar();
+        mostrarTablero();
 
         while (true) {
             System.out.println("\nTurno de " + turnoActual.getNombre() + " (" + turnoActual.getSimbolo() + ")");
             int fila, col;
-            // solicita coordenadas a jugador humano [fila,columna] para ubicar ficha
-            if (turnoActual.esHumano()) {
-                int[] movimiento = pedirMovimiento();
-                fila = movimiento[0];
-                col = movimiento[1];
-            } else {
-                // IA simple primer espacio libre
-                int[] movimiento = obtenerMovimientoIA(turnoActual.getSimbolo());
-                fila = movimiento[0];
-                col = movimiento[1];
-                System.out.println("IA juega en: " + fila + ", " + col);
-            }
-            // colocamos ficha en el tablero
-            if (tablero.colocarFicha(fila, col, turnoActual.getSimbolo())) {
-                tablero.mostrar();
-                
-                // si hay ganador o emapte se lo mestra por consola y se termina juego
-                if (tablero.hayGanador(turnoActual.getSimbolo())) {
-                    System.out.println("\n " + turnoActual.getNombre() + " ha ganado!");
-                    break;
-                } else if (tablero.estaLleno()) {
-                    System.out.println("\n Empate!");
-                    break;
+            boolean movimientoValido = false;
+
+            while (!movimientoValido) {
+                try {
+                    if (turnoActual.esHumano()) {
+                        int[] movimiento = pedirMovimiento();
+                        fila = movimiento[0];
+                        col = movimiento[1];
+                    } else {
+                        int[] movimiento = obtenerMovimientoIA();
+                        fila = movimiento[0];
+                        col = movimiento[1];
+                        System.out.println("IA juega en: " + fila + ", " + col);
+                    }
+
+                    Movimiento move = new Movimiento(fila, col, turnoActual);
+                    tablero.colocarFicha(move); // Aquí puede lanzar excepción si no es válido
+                    movimientoValido = true; // Si no lanza excepción, movimiento válido
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Movimiento inválido: " + e.getMessage() + ". Intenta de nuevo.");
                 }
-                
-                // cambiamos de turno
-                turnoActual = (turnoActual == jugador1) ? jugador2 : jugador1;
-                //movimiento invalido (ubicar ficha en casilla ocupada)
-            } else {
-                System.out.println("Movimiento invalido. Intenta de nuevo.");
             }
+
+            mostrarTablero();
+
+            if (tablero.verificarGanador()) {
+                System.out.println("\n" + turnoActual.getNombre() + " ha ganado!");
+                break;
+            } else if (!tablero.verificarEstructura()) { // No hay casillas vacías → empate
+                System.out.println("\nEmpate!");
+                break;
+            }
+
+            // Cambiar turno
+            turnoActual = (turnoActual == jugador1) ? jugador2 : jugador1;
         }
     }
-    
-    // metodo para solicitar coordenadas para ubicar la ficha en el tablero
+
     private int[] pedirMovimiento() {
         int fila, col;
         while (true) {
@@ -75,16 +76,14 @@ public class Juego {
             fila = scanner.nextInt();
             System.out.print("Ingresa columna (0-2): ");
             col = scanner.nextInt();
-            if (fila >= 0 && fila < 3 && col >= 0 && col < 3) break;// rango valido?
+            if (fila >= 0 && fila < 3 && col >= 0 && col < 3) break;
             System.out.println("Coordenadas fuera de rango. Intenta de nuevo.");
         }
-        return new int[]{fila, col}; //retorna movimiento en un arreglo
+        return new int[]{fila, col};
     }
-    
-    // metodo temporal se reemplazara posiblemente por nodoarbol.mejormovimento() en proceso..
-    private int[] obtenerMovimientoIA(char simboloIA) {
-        char[][] estado = tablero.getEstado(); // estado actual del tablero
-        //buscamos primera casilla libre
+
+    private int[] obtenerMovimientoIA() {
+        char[][] estado = tablero.getTablero();
         for (int i = 0; i < estado.length; i++) {
             for (int j = 0; j < estado[i].length; j++) {
                 if (estado[i][j] == ' ') {
@@ -92,8 +91,11 @@ public class Juego {
                 }
             }
         }
-        return new int[]{-1, -1}; // No debería ocurrir si verificamos empate 
+        return new int[]{-1, -1};
+    }
+
+    private void mostrarTablero() {
+        System.out.println(tablero.armarEstructura());
     }
 }
-
 
