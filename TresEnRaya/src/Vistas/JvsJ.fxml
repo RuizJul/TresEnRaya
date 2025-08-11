@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="JvsJ" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.JvsJController">
+   <children>
+      <VBox fx:id="ladoX" alignment="CENTER" prefHeight="400.0" prefWidth="300.0">
+         <children>
+            <TextField fx:id="jugador1" alignment="TOP_CENTER" prefHeight="38.0" prefWidth="220.0" promptText="Nombre" text="Jugador 1">
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" top="40.0" />
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <font>
+                  <Font name="Comic Sans MS Italic" size="18.0" />
+               </font>
+            </TextField>
+            <ImageView fx:id="imgX" fitHeight="185.0" fitWidth="290.0" layoutX="50.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+               <effect>
+                  <DropShadow radius="15" color="green" />
+               </effect>
+            </ImageView>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+               <children>
+                  <Button fx:id="jugarX" mnemonicParsing="false" text="Listo!">
+                     <font>
+                        <Font name="Comic Sans MS Bold Italic" size="24.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox fx:id="ladoO" alignment="CENTER" prefHeight="400.0" prefWidth="300.0" spacing="10.0">
+         <children>
+            <TextField fx:id="jugador2" alignment="TOP_CENTER" promptText="Nombre" text="Jugador 2">
+               <VBox.margin>
+                  <Insets left="15.0" right="20.0" top="40.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Comic Sans MS Italic" size="18.0" />
+               </font>
+            </TextField>
+            <ImageView fx:id="imgO" fitHeight="185.0" fitWidth="290.0" layoutX="50.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <DropShadow radius="15" color="green" />
+               </effect>
+            </ImageView>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+               <children>
+                  <Button fx:id="jugarO" mnemonicParsing="false" text="Listo!">
+                     <font>
+                        <Font name="Comic Sans MS Bold Italic" size="24.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>
