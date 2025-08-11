@@ -20,6 +20,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -39,6 +40,9 @@ public class JvsPCController {
     private Button jugar;
 
     private String simboloSeleccionado = null;
+
+    @FXML
+    private HBox root;
 
     @FXML
     public void initialize() {
@@ -62,7 +66,29 @@ public class JvsPCController {
             delay.setOnFinished(event -> irASiguienteVista());
             delay.play();
         });
+        root.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ESCAPE:
+                    regresarAPantallaAnterior();
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // Para que reciba eventos de teclado, pide el foco:
+        root.requestFocus();
     }
+    
+    private void regresarAPantallaAnterior() {
+    try {
+        Parent anterior = FXMLLoader.load(getClass().getResource("/Vistas/Bienvenida.fxml"));
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.getScene().setRoot(anterior);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 
     private void seleccionarSimbolo(String simbolo) {
         simboloSeleccionado = simbolo;
@@ -83,7 +109,7 @@ public class JvsPCController {
 
     private void irASiguienteVista() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/SiguienteVista.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Juego.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) jugar.getScene().getWindow();

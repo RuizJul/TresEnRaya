@@ -9,49 +9,49 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.PCvsPCController">
+<VBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0D1B0A, #29003D);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.PCvsPCController">
    <children>
       <HBox alignment="CENTER" prefHeight="314.0" prefWidth="600.0" spacing="15.0">
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
                <children>
-                  <TextField alignment="CENTER" text="PC 1">
+                  <TextField alignment="CENTER" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0D1B0A, #29003D); -fx-text-fill: #97ea97;" text="PC 1">
                      <font>
-                        <Font name="Comic Sans MS Bold Italic" size="12.0" />
+                        <Font name="Franklin Gothic Demi Cond" size="36.0" />
                      </font>
                   </TextField>
                   <ImageView fx:id="imagenX" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <VBox.margin>
-                        <Insets left="20.0" />
+                        <Insets right="30.0" />
                      </VBox.margin>
                      <effect>
-                        <DropShadow radius="15" color="green" />
+                        <DropShadow color="green" radius="15" />
                      </effect>
                   </ImageView>
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
                <children>
-                  <TextField alignment="CENTER" text="PC 2">
+                  <TextField alignment="CENTER" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0D1B0A, #29003D); -fx-text-fill: #97ea97;" text="PC 2">
                      <font>
-                        <Font name="Comic Sans MS Bold Italic" size="12.0" />
+                        <Font name="Franklin Gothic Demi Cond" size="36.0" />
                      </font>
                   </TextField>
                   <ImageView fx:id="imagenO" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <VBox.margin>
-                        <Insets left="20.0" />
+                        <Insets left="30.0" />
                      </VBox.margin>
                      <effect>
-                        <DropShadow radius="15" color="green" />
+                        <DropShadow color="purple" radius="15" />
                      </effect>
                   </ImageView>
                </children>
             </VBox>
          </children>
       </HBox>
-      <Button fx:id="jugar" mnemonicParsing="false" text="Listo!">
+      <Button fx:id="jugar" mnemonicParsing="false" style="-fx-text-fill: #E6FFE6; -fx-background-color: #2A2A2A;" text="Listo!">
          <font>
-            <Font name="Comic Sans MS Bold Italic" size="24.0" />
+            <Font name="Franklin Gothic Medium Cond" size="24.0" />
          </font>
       </Button>
    </children>

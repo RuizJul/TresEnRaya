@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -31,6 +32,9 @@ public class PCvsPCController {
 
     @FXML
     private Button jugar;
+    
+    @FXML
+    private VBox root;
 
     @FXML
     public void initialize() {
@@ -47,10 +51,33 @@ public class PCvsPCController {
             delay.setOnFinished(event -> irASiguienteVista());
             delay.play();
         });
+        root.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ESCAPE:
+                    regresarAPantallaAnterior();
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // Para que reciba eventos de teclado, pide el foco:
+        root.requestFocus();
     }
-     private void irASiguienteVista() {
+
+    private void regresarAPantallaAnterior() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/SiguienteVista.fxml"));
+            Parent anterior = FXMLLoader.load(getClass().getResource("/Vistas/Bienvenida.fxml"));
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.getScene().setRoot(anterior);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void irASiguienteVista() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Juego.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) jugar.getScene().getWindow();

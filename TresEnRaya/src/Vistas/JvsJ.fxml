@@ -7,14 +7,13 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="JvsJ" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.JvsJController">
+<HBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0D1B0A, #29003D);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.JvsJController">
    <children>
       <VBox fx:id="ladoX" alignment="CENTER" prefHeight="400.0" prefWidth="300.0">
          <children>
-            <TextField fx:id="jugador1" alignment="TOP_CENTER" prefHeight="38.0" prefWidth="220.0" promptText="Nombre" text="Jugador 1">
+            <TextField fx:id="jugador1" alignment="TOP_CENTER" prefHeight="38.0" prefWidth="220.0" promptText="Nombre" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0D1B0A, #29003D); -fx-skin: #8FBC8F; -fx-text-fill: #97ea97;" text="Jugador 1">
                <VBox.margin>
                   <Insets left="15.0" right="15.0" top="40.0" />
                </VBox.margin>
@@ -22,7 +21,7 @@
                   <Insets />
                </opaqueInsets>
                <font>
-                  <Font name="Comic Sans MS Italic" size="18.0" />
+                  <Font name="Franklin Gothic Demi Cond" size="36.0" />
                </font>
             </TextField>
             <ImageView fx:id="imgX" fitHeight="185.0" fitWidth="290.0" layoutX="50.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
@@ -30,14 +29,14 @@
                   <Insets top="10.0" />
                </VBox.margin>
                <effect>
-                  <DropShadow radius="15" color="green" />
+                  <DropShadow color="green" radius="15" />
                </effect>
             </ImageView>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
                <children>
-                  <Button fx:id="jugarX" mnemonicParsing="false" text="Listo!">
+                  <Button fx:id="jugarX" mnemonicParsing="false" style="-fx-background-color: #2A2A2A; -fx-text-fill: #E6FFE6;" text="Listo!">
                      <font>
-                        <Font name="Comic Sans MS Bold Italic" size="24.0" />
+                        <Font name="Franklin Gothic Demi Cond" size="24.0" />
                      </font>
                   </Button>
                </children>
@@ -46,24 +45,24 @@
       </VBox>
       <VBox fx:id="ladoO" alignment="CENTER" prefHeight="400.0" prefWidth="300.0" spacing="10.0">
          <children>
-            <TextField fx:id="jugador2" alignment="TOP_CENTER" promptText="Nombre" text="Jugador 2">
+            <TextField fx:id="jugador2" alignment="TOP_CENTER" promptText="Nombre" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0D1B0A, #29003D); -fx-text-fill: #97ea97;" text="Jugador 2">
                <VBox.margin>
                   <Insets left="15.0" right="20.0" top="40.0" />
                </VBox.margin>
                <font>
-                  <Font name="Comic Sans MS Italic" size="18.0" />
+                  <Font name="Franklin Gothic Medium Cond" size="36.0" />
                </font>
             </TextField>
             <ImageView fx:id="imgO" fitHeight="185.0" fitWidth="290.0" layoutX="50.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
                <effect>
-                  <DropShadow radius="15" color="green" />
+                  <DropShadow color="purple" radius="15" />
                </effect>
             </ImageView>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
                <children>
-                  <Button fx:id="jugarO" mnemonicParsing="false" text="Listo!">
+                  <Button fx:id="jugarO" mnemonicParsing="false" style="-fx-background-color: #2A2A2A; -fx-text-fill: #E6FFE6;" text="Listo!">
                      <font>
-                        <Font name="Comic Sans MS Bold Italic" size="24.0" />
+                        <Font name="Franklin Gothic Medium Cond" size="24.0" />
                      </font>
                   </Button>
                </children>

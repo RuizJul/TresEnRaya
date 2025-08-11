@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import javafx.scene.layout.HBox;
 
 public class JvsJController {
 
@@ -44,9 +45,13 @@ public class JvsJController {
 
     private boolean listoX = false;
     private boolean listoO = false;
+    
+    @FXML
+    private HBox root;
 
     @FXML
     public void initialize() {
+        
         // Cargar imagen X
         Image imageX = new Image(getClass().getResource("/img/imgX.png").toExternalForm());
         imgX.setImage(imageX);
@@ -75,7 +80,29 @@ public class JvsJController {
             jugarO.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
             verificarSiAmbosListos();
         });
+        root.setOnKeyPressed(event -> {
+        switch (event.getCode()) {
+            case ESCAPE:
+                regresarAPantallaAnterior();
+                break;
+            default:
+                break;
+        }
+    });
+
+    // Para que reciba eventos de teclado, pide el foco:
+    root.requestFocus();
     }
+    
+    private void regresarAPantallaAnterior() {
+    try {
+        Parent anterior = FXMLLoader.load(getClass().getResource("/Vistas/Bienvenida.fxml"));
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.getScene().setRoot(anterior);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 
     private void verificarSiAmbosListos() {
         if (listoX && listoO) {
@@ -96,7 +123,7 @@ public class JvsJController {
 
     private void irASiguienteVista() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/SiguienteVista.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Juego.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) jugarX.getScene().getWindow();
