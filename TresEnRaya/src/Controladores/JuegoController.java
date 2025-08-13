@@ -8,7 +8,14 @@ package Controladores;
  *
  * @author Julian
  */
+import MinMax.Minmax;
+import Modelo.Jugador;
+import Modelo.Movimiento;
+import Modelo.NodoArbol;
+import Modelo.Tablero;
+import Modelo.Tablero_Utils;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,8 +44,21 @@ public class JuegoController {
     private Image imagenX;
     private Image imagenO;
 
+    private Jugador jugadorX;
+    private Jugador jugadorO;
+
+    private Tablero tableroLogico;
+
+    private String fichaJugadorX = "X"; // Por defecto X
+    private String fichaJugadorO = "O"; // Por defecto O
+
+    private boolean jugadorXHumano = true;
+    private boolean jugadorOHumano = true;
+
     @FXML
     public void initialize() {
+        // Inicializar tablero lógico
+        tableroLogico = new Tablero();
         // Cargar imágenes
         imagenX = new Image(getClass().getResource("/img/imgX.png").toExternalForm());
         imagenO = new Image(getClass().getResource("/img/imgO.png").toExternalForm());
@@ -56,39 +76,136 @@ public class JuegoController {
         for (var nodo : tablero.getChildren()) {
             if (nodo instanceof Pane pane) {
                 pane.setOnMouseClicked(e -> {
-                    if (pane.getChildren().isEmpty()) {
-                        ImageView imgView = new ImageView(turnoX ? imagenX : imagenO);
-                        imgView.setFitWidth(pane.getWidth());
-                        imgView.setFitHeight(pane.getHeight());
-                        imgView.setPreserveRatio(true);
+                    if (pane.getChildren().isEmpty() && turnoActualEsHumano()) {
+                        Integer filaIndex = GridPane.getRowIndex(pane);
+                        int fila = (filaIndex == null) ? 0 : filaIndex;
 
-                        // Desplazamiento estético
-                        imgView.setTranslateX(50);
-                        imgView.setTranslateY(3);
+                        Integer colIndex = GridPane.getColumnIndex(pane);
+                        int columna = (colIndex == null) ? 0 : colIndex;
 
-                        // Aplicar sombra según turno
-                        imgView.setEffect(turnoX ? sombraVerde : sombraMorada);
+                        Jugador jugadorActual = turnoX ? jugadorX : jugadorO;
 
-                        pane.getChildren().add(imgView);
+                        // Actualizar lógica
+                        tableroLogico.colocarFicha(new Movimiento(fila, columna, jugadorActual));
 
-                        // Verificar si alguien ganó
-                        if (hayGanador()) {
-                            mostrarVentanaVictoria(turnoX ? "X" : "O");
+                        // Actualizar interfaz
+                        colocarFichaInterfaz(new Movimiento(fila, columna, jugadorActual));
+
+                        if (tableroLogico.verificarGanador()) {
+                            mostrarVentanaVictoria(turnoX ? jugadorX.getNombre() : jugadorO.getNombre());
                             return;
                         }
 
-                        // Cambiar turno
+                        if (!tableroLogico.verificarEstructura()) {
+                            mostrarVentanaVictoria("Empate");
+                            return;
+                        }
+
                         turnoX = !turnoX;
-                        mensajeTurno.setText("Turno de " + (turnoX ? "X" : "O"));
+                        actualizarMensajeTurno();
+
+                        //Si el siguiente turno es IA
+                        if (!turnoActualEsHumano()) {
+                            turnoIA();
+                        }
                     }
                 });
             }
         }
+        actualizarMensajeTurno();
     }
 
-    private boolean hayGanador() {
-        //LOGICA DE IA
-        return false;
+    private void colocarFichaInterfaz(Movimiento movimiento) {
+        for (var nodo : tablero.getChildren()) {
+            if (nodo instanceof Pane pane) {
+                Integer filaIndex = GridPane.getRowIndex(pane);
+                int fila = (filaIndex == null) ? 0 : filaIndex;
+
+                Integer colIndex = GridPane.getColumnIndex(pane);
+                int columna = (colIndex == null) ? 0 : colIndex;
+
+                if (fila == movimiento.getFila() && columna == movimiento.getColumna()) {
+                    ImageView imgView = new ImageView(movimiento.getJugador().getSimbolo() == 'X' ? imagenX : imagenO);
+                    imgView.setFitWidth(pane.getWidth());
+                    imgView.setFitHeight(pane.getHeight());
+                    imgView.setPreserveRatio(true);
+
+                    // Desplazamiento estético
+                    imgView.setTranslateX(50);
+                    imgView.setTranslateY(3);
+
+                    DropShadow sombra = movimiento.getJugador().getSimbolo() == 'X'
+                            ? new DropShadow(15, Color.GREEN)
+                            : new DropShadow(15, Color.PURPLE);
+                    imgView.setEffect(sombra);
+
+                    pane.getChildren().add(imgView);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void turnoIA() {
+        if (turnoActualEsHumano()) {
+            return;
+        }
+
+        // Calcular el movimiento pero no lo aplicamos todavía
+        Movimiento movIA = calcularMovimientoIA();
+        if (movIA == null) {
+            return;
+        }
+
+        // Pausa de 1 segundo antes de hacer el movimiento visible
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(e -> {
+            // Actualizar lógica
+            tableroLogico.colocarFicha(movIA);
+            // Actualizar interfaz
+            colocarFichaInterfaz(movIA);
+
+            if (tableroLogico.verificarGanador()) {
+                Platform.runLater(() -> mostrarVentanaVictoria(movIA.getJugador().getNombre()));
+                return;
+            }
+            if (!tableroLogico.verificarEstructura()) {
+                Platform.runLater(() -> mostrarVentanaVictoria("Empate"));
+                return;
+            }
+
+            turnoX = !turnoX;
+            actualizarMensajeTurno();
+
+            // Si sigue siendo IA, repetir turno
+            if (!turnoActualEsHumano()) {
+                turnoIA();
+            }
+        });
+        pause.play();
+    }
+
+    private Movimiento calcularMovimientoIA() {
+        Tablero estadoActual = tableroLogico.copiar();
+        NodoArbol nodoRaiz = new NodoArbol(estadoActual, null);
+        char iaSimbolo = turnoX ? jugadorX.getSimbolo() : jugadorO.getSimbolo();
+
+        int mejorValor = Integer.MIN_VALUE;
+        Movimiento mejorMovimiento = null;
+
+        for (int[] mov : Tablero_Utils.obtenerMovimientosDisponibles(estadoActual)) {
+            Tablero copia = estadoActual.copiar();
+            copia.getTablero()[mov[0]][mov[1]] = iaSimbolo;
+
+            NodoArbol hijo = new NodoArbol(copia, mov);
+            int valor = Minmax.minimax(hijo, false, iaSimbolo);
+
+            if (valor > mejorValor) {
+                mejorValor = valor;
+                mejorMovimiento = new Movimiento(mov[0], mov[1], turnoX ? jugadorX : jugadorO);
+            }
+        }
+        return mejorMovimiento;
     }
 
     private void mostrarVentanaVictoria(String ganador) {
@@ -98,7 +215,11 @@ public class JuegoController {
             Parent root = loader.load();
 
             VictoriaController controller = loader.getController();
-            controller.setMensaje("El jugador " + ganador + " ha ganado");
+            if ("Empate".equalsIgnoreCase(ganador)) {
+                controller.setMensaje("¡Es un empate!");
+            } else {
+                controller.setMensaje("El jugador " + ganador + " ha ganado");
+            }
 
             Stage popup = new Stage();
             popup.setScene(new Scene(root));
@@ -131,7 +252,16 @@ public class JuegoController {
         });
         tablero.setDisable(false);
         turnoX = true;
-        mensajeTurno.setText("Turno de X");
+        mensajeTurno.setText("Turno de " + jugadorX.getNombre());
+        tableroLogico = new Tablero(); // Reiniciar lógica
+        //la ia da el primer movimiento
+        if (!jugadorX.esHumano()) {
+            Movimiento primerMov = new Movimiento(1, 1, jugadorX);
+            tableroLogico.colocarFicha(primerMov);
+            colocarFichaInterfaz(primerMov);
+            turnoX = false;
+            actualizarMensajeTurno();
+        }
     }
 
     private void volverAPantallaBienvenida() {
@@ -148,4 +278,76 @@ public class JuegoController {
             e.printStackTrace();
         }
     }
+
+    private boolean turnoActualEsHumano() {
+        return (turnoX ? jugadorX : jugadorO).esHumano();
+    }
+    // Nuevo método para actualizar el label del turno
+
+    private void actualizarMensajeTurno() {
+        if (jugadorX == null || jugadorO == null) {
+            mensajeTurno.setText("Turno de X"); // fallback
+        } else {
+            mensajeTurno.setText("Turno de " + (turnoX ? jugadorX.getNombre() : jugadorO.getNombre()));
+        }
+    }
+
+    // Método para configurar qué tipo de jugadores son (humano o PC)
+    public void configurarJugadores(boolean jugadorXHumano, boolean jugadorOHumano) {
+        this.jugadorXHumano = jugadorXHumano;
+        this.jugadorOHumano = jugadorOHumano;
+
+        // Resetear instancias para evitar errores al crear jugadores
+        Jugador.resetInstancias();
+
+        // Crear jugadores con nombre temporal que luego será actualizado
+        jugadorX = new Jugador(jugadorXHumano ? "Jugador X" : "PC X");
+        jugadorX.setEsHumano(jugadorXHumano);
+        jugadorX.setSimbolo(fichaJugadorX.charAt(0));
+
+        jugadorO = new Jugador(jugadorOHumano ? "Jugador O" : "PC O");
+        jugadorO.setEsHumano(jugadorOHumano);
+        jugadorO.setSimbolo(fichaJugadorO.charAt(0));
+
+        actualizarMensajeTurno();
+        //Primer turno ia
+        if (!jugadorX.esHumano()) {
+            Platform.runLater(() -> {
+                Movimiento primerMov = new Movimiento(1, 1, jugadorX);
+                tableroLogico.colocarFicha(primerMov);
+                colocarFichaInterfaz(primerMov);
+                turnoX = false;
+                actualizarMensajeTurno();
+            });
+        }
+    }
+
+    // Establecer nombre de jugador X
+    public void setNombreJugadorX(String nombre) {
+        if (jugadorX != null && nombre != null && !nombre.isBlank()) {
+            jugadorX.setNombre(nombre);
+        }
+    }
+
+    // Establecer nombre de jugador O
+    public void setNombreJugadorO(String nombre) {
+        if (jugadorO != null && nombre != null && !nombre.isBlank()) {
+            jugadorO.setNombre(nombre);
+        }
+    }
+
+    // Establecer ficha jugador X
+    public void setFichaJugadorX(String ficha) {
+        if (ficha != null && (ficha.equalsIgnoreCase("X") || ficha.equalsIgnoreCase("O"))) {
+            fichaJugadorX = ficha.toUpperCase();
+        }
+    }
+
+    // Establecer ficha jugador O
+    public void setFichaJugadorO(String ficha) {
+        if (ficha != null && (ficha.equalsIgnoreCase("X") || ficha.equalsIgnoreCase("O"))) {
+            fichaJugadorO = ficha.toUpperCase();
+        }
+    }
+
 }

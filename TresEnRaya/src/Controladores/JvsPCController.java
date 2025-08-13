@@ -79,16 +79,16 @@ public class JvsPCController {
         // Para que reciba eventos de teclado, pide el foco:
         root.requestFocus();
     }
-    
+
     private void regresarAPantallaAnterior() {
-    try {
-        Parent anterior = FXMLLoader.load(getClass().getResource("/Vistas/Bienvenida.fxml"));
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.getScene().setRoot(anterior);
-    } catch (IOException e) {
-        e.printStackTrace();
+        try {
+            Parent anterior = FXMLLoader.load(getClass().getResource("/Vistas/Bienvenida.fxml"));
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.getScene().setRoot(anterior);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
 
     private void seleccionarSimbolo(String simbolo) {
         simboloSeleccionado = simbolo;
@@ -111,6 +111,33 @@ public class JvsPCController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Juego.fxml"));
             Parent root = loader.load();
+
+            JuegoController juegoController = loader.getController();
+
+            // Configurar jugadores:
+            // El jugador humano siempre será el que eligió el símbolo
+            boolean jugadorXHumano = "X".equalsIgnoreCase(simboloSeleccionado);
+            boolean jugadorOHumano = !jugadorXHumano;
+
+            juegoController.configurarJugadores(jugadorXHumano, jugadorOHumano);
+
+            // Poner nombre del jugador humano
+            if (jugadorXHumano) {
+                juegoController.setNombreJugadorX(jugadorName.getText());
+                juegoController.setNombreJugadorO("PC");
+            } else {
+                juegoController.setNombreJugadorO(jugadorName.getText());
+                juegoController.setNombreJugadorX("PC");
+            }
+
+            // Establecer la ficha seleccionada para humano y la opuesta para PC
+            if (jugadorXHumano) {
+                juegoController.setFichaJugadorX(simboloSeleccionado);
+                juegoController.setFichaJugadorO(simboloSeleccionado.equalsIgnoreCase("X") ? "O" : "X");
+            } else {
+                juegoController.setFichaJugadorO(simboloSeleccionado);
+                juegoController.setFichaJugadorX(simboloSeleccionado.equalsIgnoreCase("O") ? "X" : "O");
+            }
 
             Stage stage = (Stage) jugar.getScene().getWindow();
             Scene scene = new Scene(root);

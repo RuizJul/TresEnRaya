@@ -10,80 +10,45 @@ import java.util.*;
  *
  * @author Julian
  */
+import Modelo.Tablero;
+import java.util.ArrayList;
+import java.util.List;
+
 public class NodoArbol {
 
-    Tablero tableroActual;
-    List<NodoArbol> hijos;
-    int utilidad;
-    boolean turnoJugador;
+    private Tablero estado;
+    private int[] movimiento; // fila, columna
+    private List<NodoArbol> hijos;
+    private int valor; // evaluación Minimax
 
-    public NodoArbol() {
-        this.tableroActual = new Tablero();
-        this.hijos = null;
-        this.utilidad = 0;
-        this.turnoJugador = true;
-
+    public NodoArbol(Tablero estado, int[] movimiento) {
+        this.estado = estado;
+        this.movimiento = movimiento;
+        this.hijos = new ArrayList<>();
+        this.valor = 0;
     }
 
-    public void agregarHijo() {
-        // if (hijos == null) {
-        //     hijos = new ArrayList<>();
-        // }
-
-        // // Definir símbolo según turno
-        // char simbolo = turnoJugador ? 'X' : 'O';
-
-        // // Obtener estado actual
-        // char[][] estado = tableroActual.getTablero();
-
-        // for (int i = 0; i < 3; i++) {
-        //     for (int j = 0; j < 3; j++) {
-        //         if (estado[i][j] == ' ') { // Casilla libre
-        //             // Clonar el tablero actual
-        //             Tablero nuevoTablero = tableroActual.copiar();
-        //             // Colocar la ficha en la copia
-        //             nuevoTablero.colocarFicha(i, j, simbolo);
-        //             // Crear el nodo hijo
-        //             NodoArbol hijo = new NodoArbol();
-        //             hijo.setTableroActual(nuevoTablero);
-        //             hijo.setTurnoJugador(!turnoJugador); // Cambiar turno
-        //             // Agregar a la lista de hijos
-        //             hijos.add(hijo);
-        //         }
-        //     }
-        // }
-    }
-
-    public int getUtilidad() {
-        return utilidad;
-    }
-
-    public void setUtilidad(int utilidad) {
-        this.utilidad = utilidad;
-    }
-
-    public Tablero getTableroActual() {
-        return tableroActual;
-    }
-
-    public void setTableroActual(Tablero tableroActual) {
-        this.tableroActual = tableroActual;
+    public void agregarHijo(NodoArbol hijo) {
+        hijos.add(hijo);
     }
 
     public List<NodoArbol> getHijos() {
         return hijos;
     }
 
-    public void setHijos(List<NodoArbol> hijos) {
-        this.hijos = hijos;
+    public Tablero getEstado() {
+        return estado;
     }
 
-    public boolean isTurnoJugador() {
-        return turnoJugador;
+    public int[] getMovimiento() {
+        return movimiento;
     }
 
-    public void setTurnoJugador(boolean turnoJugador) {
-        this.turnoJugador = turnoJugador;
+    public int getValor() {
+        return valor;
     }
 
+    public void setValor(int valor) {
+        this.valor = valor;
+    }
 }

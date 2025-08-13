@@ -45,13 +45,13 @@ public class JvsJController {
 
     private boolean listoX = false;
     private boolean listoO = false;
-    
+
     @FXML
     private HBox root;
 
     @FXML
     public void initialize() {
-        
+
         // Cargar imagen X
         Image imageX = new Image(getClass().getResource("/img/imgX.png").toExternalForm());
         imgX.setImage(imageX);
@@ -81,39 +81,39 @@ public class JvsJController {
             verificarSiAmbosListos();
         });
         root.setOnKeyPressed(event -> {
-        switch (event.getCode()) {
-            case ESCAPE:
-                regresarAPantallaAnterior();
-                break;
-            default:
-                break;
-        }
-    });
+            switch (event.getCode()) {
+                case ESCAPE:
+                    regresarAPantallaAnterior();
+                    break;
+                default:
+                    break;
+            }
+        });
 
-    // Para que reciba eventos de teclado, pide el foco:
-    root.requestFocus();
+        // Para que reciba eventos de teclado, pide el foco:
+        root.requestFocus();
     }
-    
+
     private void regresarAPantallaAnterior() {
-    try {
-        Parent anterior = FXMLLoader.load(getClass().getResource("/Vistas/Bienvenida.fxml"));
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.getScene().setRoot(anterior);
-    } catch (IOException e) {
-        e.printStackTrace();
+        try {
+            Parent anterior = FXMLLoader.load(getClass().getResource("/Vistas/Bienvenida.fxml"));
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.getScene().setRoot(anterior);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
 
     private void verificarSiAmbosListos() {
         if (listoX && listoO) {
-            System.out.println("Ambos jugadores están listos, cargando siguiente vista en 1 segundo...");
-            
+            System.out.println("Ambos jugadores estan listos, cargando siguiente vista en 1 segundo...");
+
             // Cambia texto y color de ambos botones para efecto visual
             jugarX.setText("¡Comenzando!");
             jugarO.setText("¡Comenzando!");
             jugarX.setStyle("-fx-background-color: #2E7D32; -fx-text-fill: white;");
             jugarO.setStyle("-fx-background-color: #2E7D32; -fx-text-fill: white;");
-            
+
             // Espera 1 segundo antes de cambiar de vista
             PauseTransition delay = new PauseTransition(Duration.seconds(1));
             delay.setOnFinished(event -> irASiguienteVista());
@@ -125,6 +125,23 @@ public class JvsJController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vistas/Juego.fxml"));
             Parent root = loader.load();
+
+            // Obtener el controlador para configurar jugadores
+            JuegoController juegoController = loader.getController();
+
+            // Pasar que ambos jugadores son humanos
+            juegoController.configurarJugadores(true, true);
+
+            // Pasar los nombres, asegurando que si el campo está vacío se usa un nombre por defecto
+            String nombreX = jugador1.getText().isBlank() ? "Jugador X" : jugador1.getText();
+            String nombreO = jugador2.getText().isBlank() ? "Jugador O" : jugador2.getText();
+
+            juegoController.setNombreJugadorX(nombreX);
+            juegoController.setNombreJugadorO(nombreO);
+
+            // Asignar ficha fijo: jugador1 es X, jugador2 es O (puedes adaptar si quieres que elijan)
+            juegoController.setFichaJugadorX("X");
+            juegoController.setFichaJugadorO("O");
 
             Stage stage = (Stage) jugarX.getScene().getWindow();
             Scene scene = new Scene(root);

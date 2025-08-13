@@ -28,11 +28,23 @@ public class BienvenidaController {
     @FXML
     private Button PCVSPC;  // PC vs PC
 
+    private boolean jugador1Humano;
+    private boolean jugador2Humano;
+
     @FXML
     public void initialize() {
-        JGVSJG.setOnAction(e -> cargarVista("/Vistas/JvsJ.fxml"));
-        JGVSPC.setOnAction(e -> cargarVista("/Vistas/JvsPC.fxml"));
-        PCVSPC.setOnAction(e -> cargarVista("/Vistas/PCvsPC.fxml"));
+        JGVSJG.setOnAction(e -> {
+            jugador1Humano = true;
+            jugador2Humano = true;
+            cargarVista("/Vistas/JvsJ.fxml");
+        });
+        JGVSPC.setOnAction(e -> {
+            jugador1Humano = true;
+            jugador2Humano = false;
+            cargarVista("/Vistas/JvsPC.fxml");
+        });
+
+        
     }
 
     private void cargarVista(String rutaFXML) {
@@ -45,4 +57,5 @@ public class BienvenidaController {
             ex.printStackTrace();
         }
     }
+
 }
