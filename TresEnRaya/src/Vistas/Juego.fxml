@@ -11,7 +11,7 @@
 
 <VBox fx:id="root" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="30.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0D1B0A, #29003D);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.JuegoController">
    <children>
-      <Label fx:id="mensajeTurno" alignment="CENTER" prefHeight="18.0" prefWidth="174.0" textFill="#97ea97">
+      <Label fx:id="mensajeTurno" alignment="CENTER" prefHeight="42.0" prefWidth="441.0" textFill="#97ea97">
          <font>
             <Font name="Franklin Gothic Demi Cond" size="36.0" />
          </font>

@@ -5,4 +5,7 @@ module com.mycompany.TresEnRaya {
 
     opens Controladores to javafx.fxml;
     exports Controladores;
+
+    opens tresenraya to javafx.fxml;
+    exports tresenraya;
 }
